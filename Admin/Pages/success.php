@@ -33,16 +33,6 @@
             </thead>
             <tbody>
               <?php
-              //Counts the lines in Busy_list
-              $count = 0;
-              $line = file("/var/www/html/Recess/ready_jobs.txt");
-              $top200 = array_slice(($line),0,1000);
-              foreach($top200 as $line)
-              { 
-                  $count++;
-              }
-
-              $total = $count/9;
               //Counts the lines in waiting list
 
               $number = 0;
@@ -62,24 +52,41 @@
                   $counter++;
               }
 
-              $another1 = $number + $counter + $total;
+              $another1 = $number + $counter;
 
-              $ling = file("/var/www/html/Recess/success.txt");
-              $top1200 = array_slice(($ling),0,100);
-              foreach($top1200 as $ling)
-              { 
-              	$pieces = explode("\t", $ling);
-              	?>
-              	<tr class="row100">
-              		<td class="column100 column1" data-column="column1">
-                    <?php echo $pieces[0]; ?>
-                  </td>
-                  <td class="column100 column2" data-column="column2">
-                    <?php echo ($pieces[1]/$another1) * 100; ?>
-                  </td>
-              	<?php
-              }
-              ?>
+              $line = file("/var/www/html/Recess/success.txt");
+                  $top200 = array_slice(($line),0,1000);
+                  foreach($top200 as $line)
+                  { 
+                    $pieces = explode(" ",$line);
+                    for ($i = 0;$i < count($pieces);$i++){
+                      if(isset($pieces[$i])){
+                        $count = 0;
+                        $lined = file("/var/www/html/Recess/ready_jobs.txt");
+                        $top2000 = array_slice(($lined),0,1000);
+                        foreach($top2000 as $lined)
+                        { 
+                          if(substr_count($lined, $pieces[$i])==1){
+                            $count++;
+                          }
+                        }
+
+                        ?>
+                    <tr class="row100">
+                        <td class="column100 column1" data-column="column1">
+                          <?php echo $pieces[$i]; ?>
+                        </td>
+                        <td class="column100 column2" data-column="column2">
+                          <?php echo ($count/$another1)*100; ?>
+                        </td>
+                        </tr>
+
+                        <?php
+                      }
+                    }
+
+                  }
+                   ?>
             </tbody>
           </table>
           </div>
