@@ -28,12 +28,21 @@
                </tr>
               <tr class="row100 head">
                 <th class="column100 column1" id="minor" data-column="column1">Client ID</th>
-                <th class="column100 column4" id="minor" data-column="column4">Percentage (%)</th>
+                <th class="column100 column2" id="minor" data-column="column2">Percentage (%)</th>
               </tr>
             </thead>
             <tbody>
               <?php
               //Counts the lines in waiting list
+              $counti = 0;
+              $linee = file("/var/www/html/Recess/ready_jobs.txt");
+              $top5200 = array_slice(($linee),0,1000);
+              foreach($top5200 as $linee)
+              { 
+                  $counti++;
+              }
+
+              $total = $counti/9;
 
               $number = 0;
               $lines = file("/var/www/html/Recess/busy_list.txt");
@@ -52,7 +61,7 @@
                   $counter++;
               }
 
-              $another1 = $number + $counter;
+              $another1 = $number + $counter + $total;
 
               $line = file("/var/www/html/Recess/success.txt");
                   $top200 = array_slice(($line),0,1000);
